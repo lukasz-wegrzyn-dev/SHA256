@@ -76,11 +76,11 @@ extension Convertible {
         var ret: [T] = []
         withUnsafeBytes(of: self) { buffer in
             let buffer8Bits = Array<UInt8>(buffer.reversed())
-            for i in (0..<(Self.bitWidth / T.bitWidth)) {
+            for i in 0..<Self.bitWidth / T.bitWidth {
                 var x: T = 0
-                for j in (0..<(T.bitWidth / 8)) {
+                for j in 0..<T.bitWidth / 8 {
                     x = x << 8
-                    x |= T(buffer8Bits[(i * T.bitWidth) / 8 + j])
+                    x |= T(buffer8Bits[(i * T.bitWidth)/8 + j])
                 }
                 ret.append(x)
             }
@@ -111,9 +111,9 @@ extension Array where Element: FixedWidthInteger & UnsignedInteger & Convertible
         }
 
         var x: T = 0
-        for i in 0..<count {
+        for (i, element) in enumerated() {
             x = x << Element.bitWidth
-            x |= T(self[i])
+            x |= T(element)
             if (i+1) % (T.bitWidth / 8) == 0 || i == count - 1 {
                 ret.append(x)
                 x = 0
